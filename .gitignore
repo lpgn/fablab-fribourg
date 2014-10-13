@@ -7,3 +7,9 @@ test/bower_components
 
 styleguide
 build
+
+*.DS_Store
+uploads
+config/application.php
+config/database.rb
+wordpress/wp-content/*

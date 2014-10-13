@@ -24,7 +24,7 @@ gulp.task('vendors', function() {
       ])
       .pipe($.concat('vendors.css'))
       .pipe($.minifyCss())
-      .pipe(gulp.dest('build/css'));
+      .pipe(gulp.dest('src/themes/fablab/build/css'));
 
   /**
    * JS VENDORS
@@ -48,7 +48,7 @@ gulp.task('vendors', function() {
     ])
     .pipe($.concat('vendors.min.js'))
     .pipe($.uglify())
-    .pipe(gulp.dest('build/js'));
+    .pipe(gulp.dest('src/themes/fablab/build/js'));
 
 
   /**
@@ -57,9 +57,9 @@ gulp.task('vendors', function() {
    */
   gulp.src([
       'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
-      'assets/fonts/*'
+      'src/themes/fablab/assets/fonts/*'
     ])
-    .pipe(gulp.dest('build/fonts'));
+    .pipe(gulp.dest('src/themes/fablab/build/fonts'));
 
   /**
    * POLYFILLS SOURCES
@@ -71,7 +71,7 @@ gulp.task('vendors', function() {
     ])
     .pipe($.concat('polyfills.min.js'))
     .pipe($.uglify())
-    .pipe(gulp.dest('build/js'));
+    .pipe(gulp.dest('src/themes/fablab/build/js'));
 });
 
 /**
@@ -80,7 +80,7 @@ gulp.task('vendors', function() {
  */
 gulp.task('styles', function() {
   if (argv.production) { console.log('Processing styles for production env.' ); }
-  return gulp.src('assets/sass/fablab.scss')
+  return gulp.src('src/themes/fablab/assets/sass/fablab.scss')
     .pipe($.rubySass())
       .on('error', $.notify.onError(function (error) {
          console.log(error.message);
@@ -90,7 +90,7 @@ gulp.task('styles', function() {
       }))
     .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'ff 27', 'opera 12.1'))
     .pipe($.minifyCss())
-    .pipe(gulp.dest('build/css'));
+    .pipe(gulp.dest('src/themes/fablab/build/css'));
 });
 
 /**
@@ -99,14 +99,14 @@ gulp.task('styles', function() {
  * And jshint check to highlight errors as we go.
  */
 gulp.task('scripts', function() {
-  return gulp.src('assets/js/*.js')
+  return gulp.src('src/themes/fablab/assets/js/*.js')
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.concat('main.js'))
-    .pipe(gulp.dest('build/js'))
+    .pipe(gulp.dest('src/themes/fablab/build/js'))
     .pipe($.rename({ suffix: '.min' }))
     .pipe($.uglify())
-    .pipe(gulp.dest('build/js'));
+    .pipe(gulp.dest('src/themes/fablab/build/js'));
 });
 
 /**
@@ -133,10 +133,10 @@ gulp.task('serve', ['styles', 'scripts'], function () {
     open: false
   });
   gulp.watch(['styleguide/*.html'], reload);
-  gulp.watch(['assets/sass/**/*.scss'], function() {
+  gulp.watch(['src/themes/fablab/assets/sass/**/*.scss'], function() {
     runSequence('styles', 'styleguide', reload);
   });
-  gulp.watch(['assets/js/**/*.js'], function() {
+  gulp.watch(['src/themes/fablab/assets/js/**/*.js'], function() {
     runSequence('scripts', reload);
   });
 });
