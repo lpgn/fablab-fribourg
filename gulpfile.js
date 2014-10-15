@@ -81,7 +81,7 @@ gulp.task('vendors', function() {
 gulp.task('styles', function() {
   if (argv.production) { console.log('Processing styles for production env.' ); }
   return gulp.src('src/themes/fablab/assets/sass/fablab.scss')
-    .pipe($.rubySass())
+    .pipe($.sass())
       .on('error', $.notify.onError(function (error) {
          console.log(error.message);
          if (!argv.production) {
@@ -90,7 +90,9 @@ gulp.task('styles', function() {
       }))
     .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'ff 27', 'opera 12.1'))
     .pipe($.minifyCss())
-    .pipe(gulp.dest('src/themes/fablab/build/css'));
+    .pipe(gulp.dest('src/themes/fablab/build/css'))
+    .pipe($.rename('style.css'))
+    .pipe(gulp.dest('src/themes/fablab'));
 });
 
 /**
