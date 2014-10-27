@@ -1,5 +1,5 @@
 # Directory to parse
-source: src/themes/fablab/assets
+source: content/themes/fablab/assets
 
 # Directory to build the styleguide
 destination: styleguide
@@ -12,14 +12,15 @@ custom_markdown: bower_components/Cortana/CortanaMarkdownRenderer.rb
 index: README
 
 dependencies:
-  - src/themes/fablab/build/css
-  - src/themes/fablab/build/img
-  - src/themes/fablab/build/js
+  - content/themes/fablab/build/css
+  - content/themes/fablab/build/img
+  - content/themes/fablab/build/js
 
 # List all css to include for the styleguide render examples (path from styleguide directory)
 css_include:
 # - 'css/vendors.css'
   - 'css/fablab.css'
+  - 'css/fablab.css.map'
 
 # List all js to include for the styleguide render examples (path from styleguide directory)
 js_include:

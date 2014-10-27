@@ -24,7 +24,7 @@ gulp.task('vendors', function() {
       ])
       .pipe($.concat('vendors.css'))
       .pipe($.minifyCss())
-      .pipe(gulp.dest('src/themes/fablab/build/css'));
+      .pipe(gulp.dest('content/themes/fablab/build/css'));
 
   /**
    * JS VENDORS
@@ -48,7 +48,7 @@ gulp.task('vendors', function() {
     ])
     .pipe($.concat('vendors.min.js'))
     .pipe($.uglify())
-    .pipe(gulp.dest('src/themes/fablab/build/js'));
+    .pipe(gulp.dest('content/themes/fablab/build/js'));
 
 
   /**
@@ -57,9 +57,9 @@ gulp.task('vendors', function() {
    */
   gulp.src([
       'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
-      'src/themes/fablab/assets/fonts/*'
+      'content/themes/fablab/assets/fonts/*'
     ])
-    .pipe(gulp.dest('src/themes/fablab/build/fonts'));
+    .pipe(gulp.dest('content/themes/fablab/build/fonts'));
 
   /**
    * POLYFILLS SOURCES
@@ -71,7 +71,7 @@ gulp.task('vendors', function() {
     ])
     .pipe($.concat('polyfills.min.js'))
     .pipe($.uglify())
-    .pipe(gulp.dest('src/themes/fablab/build/js'));
+    .pipe(gulp.dest('content/themes/fablab/build/js'));
 });
 
 /**
@@ -80,19 +80,31 @@ gulp.task('vendors', function() {
  */
 gulp.task('styles', function() {
   if (argv.production) { console.log('Processing styles for production env.' ); }
-  return gulp.src('src/themes/fablab/assets/sass/fablab.scss')
-    .pipe($.sass())
-      .on('error', $.notify.onError(function (error) {
-         console.log(error.message);
-         if (!argv.production) {
-           return 'Message to the notifier: ' + error.message;
-         }
-      }))
-    .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'ff 27', 'opera 12.1'))
-    .pipe($.minifyCss())
-    .pipe(gulp.dest('src/themes/fablab/build/css'))
+  return gulp.src('content/themes/fablab/assets/sass/fablab.scss')
+    // .pipe($.rubySass({style:'compact'}))
+    //   .on('error', $.notify.onError(function (error) {
+    //      console.log(error.message);
+    //      if (!argv.production) {
+    //        return 'Message to the notifier: ' + error.message;
+    //      }
+    //   }))
+    // .pipe($.autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'ff 27', 'opera 12.1'))
+    // .pipe(gulp.dest('content/themes/fablab/build/css'))
+    // .pipe($.rename('style.css'))
+    .pipe($.sass({sourcemap: true}))
+    .on('error', function (error) {
+        console.error(error);
+        this.emit('end');
+    })
+    .pipe($.sourcemaps.init({loadMaps: true}))
+    .pipe($.autoprefixer({
+        browsers: ['last 2 versions']
+    }))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('content/themes/fablab/build/css'))
     .pipe($.rename('style.css'))
-    .pipe(gulp.dest('src/themes/fablab'));
+    .pipe(gulp.dest('content/themes/fablab'))
+    .pipe(reload({stream:true}));
 });
 
 /**
@@ -101,14 +113,14 @@ gulp.task('styles', function() {
  * And jshint check to highlight errors as we go.
  */
 gulp.task('scripts', function() {
-  return gulp.src('src/themes/fablab/assets/js/*.js')
+  return gulp.src('content/themes/fablab/assets/js/*.js')
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.concat('main.js'))
-    .pipe(gulp.dest('src/themes/fablab/build/js'))
+    .pipe(gulp.dest('content/themes/fablab/build/js'))
     .pipe($.rename({ suffix: '.min' }))
     .pipe($.uglify())
-    .pipe(gulp.dest('src/themes/fablab/build/js'));
+    .pipe(gulp.dest('content/themes/fablab/build/js'));
 });
 
 /**
@@ -122,7 +134,7 @@ gulp.task('styleguide', function () {
 /**
  * Clean output directories
  */
-gulp.task('clean', del.bind(null, ['build', 'styleguide']));
+gulp.task('clean', del.bind(null, ['content/themes/fablab/build', 'styleguide']));
 
 /**
  * Serve
@@ -135,10 +147,10 @@ gulp.task('serve', ['styles', 'scripts'], function () {
     open: false
   });
   gulp.watch(['styleguide/*.html'], reload);
-  gulp.watch(['src/themes/fablab/assets/sass/**/*.scss'], function() {
+  gulp.watch(['content/themes/fablab/assets/sass/**/*.scss'], function() {
     runSequence('styles', 'styleguide', reload);
   });
-  gulp.watch(['src/themes/fablab/assets/js/**/*.js'], function() {
+  gulp.watch(['content/themes/fablab/assets/js/**/*.js'], function() {
     runSequence('scripts', reload);
   });
 });
